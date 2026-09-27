@@ -176,7 +176,7 @@ The Nmap results were compared with the services detected locally on the Ubuntu 
 
 This homelab will be expanded with additional security and infrastructure exercises:
 
-- [ ] HTTPS and TLS configuration
+- [x] HTTPS and TLS configuration
 - [ ] Nginx hardening
 - [ ] SSH hardening
 - [ ] Linux permissions and users
