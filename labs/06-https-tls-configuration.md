@@ -1,19 +1,21 @@
-# HTTPS / TLS Configuration
+# Lab 06 - HTTPS / TLS Configuration
 
 ## Objective
 
 Configure Nginx to serve HTTPS traffic using a self-signed TLS certificate and allow HTTPS traffic through the UFW firewall.
 
----
-
 ## Environment
 
-- Server: Ubuntu Server
-- Web Server: Nginx
-- Security Testing: Kali Linux
-- Virtualization: VMware Workstation
-- Network: 192.168.153.0/24
-- Server IP: 192.168.153.129
+| Component | Details |
+|---|---|
+| Server | Ubuntu Server |
+| Client | Kali Linux |
+| Web Server | Nginx 1.28.3 |
+| Protocol | HTTP / HTTPS |
+| Network | VMware Host-Only / NAT Lab Network |
+| Server IP | 192.168.153.129 |
+
+> The IP address belongs to an isolated home lab environment.
 
 ---
 
