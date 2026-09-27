@@ -8,15 +8,17 @@ The goal of this project is to develop practical skills in Linux system administ
 
 ## Lab Environment
 
-| Component | Technology |
+| Component | Details |
 |---|---|
-| Virtualization | VMware Workstation |
 | Server | Ubuntu Server |
-| Security Testing | Kali Linux |
-| Web Server | Nginx |
-| Firewall | UFW |
-| Network Scanning | Nmap |
-| Network | VMware NAT |
+| Client | Kali Linux |
+| Web Server | Nginx 1.28.3 |
+| Protocol | HTTP / HTTPS |
+| Network | VMware Host-Only / NAT Lab Network |
+| Server IP | 192.168.153.129 |
+
+> The IP address belongs to an isolated home lab environment.
+
 
 ---
 
