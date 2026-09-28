@@ -154,7 +154,9 @@ curl -k -I https://192.168.153.129
 ```
 The same security headers were observed from the external lab client.
 
-## 7. Results
+---
+
+## Results
 
 The Nginx server was successfully hardened against several common web security issues.
 
