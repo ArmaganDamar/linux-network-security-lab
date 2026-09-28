@@ -180,7 +180,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 
 - [x] HTTPS and TLS configuration
 - [x] Nginx hardening
-- [ ] SSH hardening
+- [x] SSH hardening
 - [ ] Linux permissions and users
 - [ ] Log analysis
 - [ ] Wireshark network analysis
