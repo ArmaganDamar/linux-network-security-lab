@@ -181,7 +181,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 - [x] HTTPS and TLS configuration
 - [x] Nginx hardening
 - [x] SSH hardening
-- [ ] Linux permissions and users
+- [x] Linux permissions and users
 - [ ] Log analysis
 - [ ] Wireshark network analysis
 - [ ] Network traffic inspection
