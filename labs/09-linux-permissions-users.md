@@ -20,12 +20,13 @@ The main objectives were:
 | Component | Details |
 |---|---|
 | Server | Ubuntu Server |
-| Main User | `armagan` |
-| Test Users | `developer`, `auditor` |
-| Group | `webteam` |
-| Lab Directory | `/srv/security-lab` |
-| Tools | `chmod`, `chown`, `usermod`, `setfacl`, `getfacl`, `stat` |
+| Client | Kali Linux |
+| Web Server | Nginx 1.28.3 |
+| Protocol | HTTP / HTTPS |
+| Network | VMware Host-Only / NAT Lab Network |
+| Server IP | 192.168.153.129 |
 
+> The IP address belongs to an isolated home lab environment.
 ---
 
 ## 1. Current User and Group Information
