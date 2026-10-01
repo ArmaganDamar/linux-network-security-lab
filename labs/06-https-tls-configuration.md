@@ -4,7 +4,7 @@
 
 Configure Nginx to serve HTTPS traffic using a self-signed TLS certificate and allow HTTPS traffic through the UFW firewall.
 
-## Environment
+## Lab Environment
 
 | Component | Details |
 |---|---|
