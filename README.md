@@ -183,7 +183,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 - [x] SSH hardening
 - [x] Linux permissions and users
 - [x] Log analysis
-- [ ] Wireshark network analysis
+- [x] Wireshark network analysis
 - [ ] Network traffic inspection
 - [ ] Vulnerability scanning
 - [ ] IDS/IPS
