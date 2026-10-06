@@ -185,7 +185,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 - [x] Log analysis
 - [x] Wireshark network analysis
 - [x] Network traffic inspection
-- [ ] Vulnerability scanning
+- [x] Vulnerability scanning
 - [ ] IDS/IPS
 - [ ] Docker security
 - [ ] Active Directory lab
