@@ -8,18 +8,16 @@ The lab focused on capturing and analyzing ARP, DNS, TCP, HTTP, HTTPS/TLS, and S
 
 | Component | Details |
 |---|---|
-| Attacker / Analysis Machine | Kali Linux |
-| Target Machine | Ubuntu Server 24.04 LTS |
-| Network | VMware Host-Only / Lab Network |
-| Kali IP | `192.168.153.130` |
-| Ubuntu Server IP | `192.168.153.129` |
-| Packet Analysis Tool | Wireshark |
-| Web Server | Nginx |
-| HTTPS | TLS 1.3 |
-| SSH | OpenSSH |
+| Server | Ubuntu Server |
+| Client | Kali Linux |
+| Web Server | Nginx 1.28.3 |
+| Protocol | HTTP / HTTPS |
+| Network | VMware Host-Only / NAT Lab Network |
+| Server IP | 192.168.153.129 |
 
-## Tasks Completed
+> The IP address belongs to an isolated home lab environment.
 
+---
 
 ## 1. Network Connectivity Verification
 The Ubuntu Server network configuration was verified:
