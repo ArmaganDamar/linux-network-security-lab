@@ -184,7 +184,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 - [x] Linux permissions and users
 - [x] Log analysis
 - [x] Wireshark network analysis
-- [ ] Network traffic inspection
+- [x] Network traffic inspection
 - [ ] Vulnerability scanning
 - [ ] IDS/IPS
 - [ ] Docker security
