@@ -2,38 +2,39 @@
 
 ## Objective
 
-Practice Infrastructure as Code (IaC) workflows by defining, planning, deploying, validating, and destroying a local container with OpenTofu. This lab uses a local Docker Engine to learn the workflow without provisioning paid cloud resources.
+Learn the core Infrastructure as Code (IaC) workflow by defining, planning, deploying, validating, and removing a local Nginx container with OpenTofu. The lab uses the existing Ubuntu Server and Docker Engine to practice cloud-style provisioning without creating paid cloud resources.
 
-> **Scope note:** This is a local IaC exercise inspired by cloud infrastructure workflows. It does **not** create or configure resources in Microsoft Azure.
+> **Scope:** This lab uses local Docker only. It does not provision or configure resources in Microsoft Azure.
 
 ## Environment
 
-- OS: Ubuntu Server 24.04.1 LTS
-- OpenTofu: v1.13.1
-- Docker Engine: 29.9.0
-- Docker provider: `kreuzwerker/docker` v4.6.0
-- Container image: `nginx:alpine`
-- Published endpoint: `127.0.0.1:8081` → container port `80`
+- **Operating system:** Ubuntu Server 24.04.1 LTS
+- **OpenTofu:** v1.13.1
+- **Docker Engine:** 29.9.0
+- **Docker provider:** `kreuzwerker/docker` v4.6.0
+- **Container image:** `nginx:alpine`
+- **Host binding:** `127.0.0.1:8081` → container port `80`
+- **Project directory:** `/opt/opentofu-docker-lab`
 
 ## Architecture
 
 ```text
-OpenTofu configuration (main.tf)
-            |
-            v
-Docker provider v4.6.0
-            |
-            v
+main.tf
+  |
+  v
+OpenTofu
+  |
+  v
+kreuzwerker/docker provider v4.6.0
+  |
+  v
 Local Docker Engine
-            |
-            +-- nginx:alpine image (kept locally)
-            |
-            +-- opentofu-lab-nginx container
-                    |
-                    +-- 127.0.0.1:8081 -> container:80
+  |-- nginx:alpine image (kept locally)
+  `-- opentofu-lab-nginx container
+        `-- 127.0.0.1:8081 -> container port 80
 ```
 
-The host-side binding uses `127.0.0.1`, so the published Nginx port is intended to be reachable from the Ubuntu host itself, not directly from other network hosts.
+Binding the published port to `127.0.0.1` restricts the service to the Ubuntu host's loopback interface instead of exposing it on all host interfaces.
 
 ## Configuration
 
@@ -79,27 +80,37 @@ output "nginx_url" {
 }
 ```
 
-The Docker provider version is pinned to `4.6.0`. The attempted `pids_limit` argument was removed after the provider reported it as unsupported by this resource schema.
+The provider version is pinned to `4.6.0` so future initializations use the selected version. OpenTofu created `terraform.lock.hcl` during initialization. The `pids_limit` argument was tested but removed after provider v4.6.0 reported it as unsupported for this resource.
 
 ## Procedure
 
-### 1. Initialize the project
+### 1. Install and verify OpenTofu
+
+OpenTofu was installed on Ubuntu using the official Debian installation script. The installed version was verified with:
+
+```bash
+tofu version
+```
+
+Observed version: `OpenTofu v1.13.1`.
+
+### 2. Initialize the project
 
 ```bash
 sudo tofu -chdir=/opt/opentofu-docker-lab init
 ```
 
-Result: OpenTofu successfully initialized and installed `kreuzwerker/docker` v4.6.0. It also created `terraform.lock.hcl` to record the provider selection.
+**Result:** Initialization succeeded and installed `kreuzwerker/docker` v4.6.0. OpenTofu generated `terraform.lock.hcl` to record provider selection.
 
-### 2. Validate formatting
+### 3. Check formatting
 
 ```bash
 sudo tofu fmt -check /opt/opentofu-docker-lab/main.tf
 ```
 
-Result: the command completed without a formatting error.
+**Result:** The command completed without a formatting error.
 
-### 3. Review the execution plan
+### 4. Review the execution plan
 
 ```bash
 sudo tofu -chdir=/opt/opentofu-docker-lab plan
@@ -111,9 +122,9 @@ Plan summary:
 Plan: 2 to add, 0 to change, 0 to destroy.
 ```
 
-The two managed resources were the Docker image and the Nginx container.
+The planned resources were the local `nginx:alpine` image and the `opentofu-lab-nginx` container.
 
-### 4. Apply the configuration
+### 5. Apply the configuration
 
 ```bash
 sudo tofu -chdir=/opt/opentofu-docker-lab apply
@@ -121,27 +132,27 @@ sudo tofu -chdir=/opt/opentofu-docker-lab apply
 
 After reviewing the plan, `yes` was entered at the confirmation prompt.
 
-Result:
+**Result:**
 
 ```text
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 nginx_url = "http://127.0.0.1:8081"
 ```
 
-### 5. Verify the service
+### 6. Validate Nginx
 
 ```bash
 curl -I http://127.0.0.1:8081
 sudo docker ps
 ```
 
-Observed results:
+**Observed results:**
 
-- HTTP returned `HTTP/1.1 200 OK`.
+- The HTTP request returned `HTTP/1.1 200 OK`.
 - The `opentofu-lab-nginx` container was running.
-- Docker showed the port binding as `127.0.0.1:8081->80/tcp`.
+- Docker showed the published port as `127.0.0.1:8081->80/tcp`.
 
-### 6. Destroy managed resources
+### 7. Destroy the managed resources
 
 ```bash
 sudo tofu -chdir=/opt/opentofu-docker-lab destroy
@@ -149,40 +160,40 @@ sudo tofu -chdir=/opt/opentofu-docker-lab destroy
 
 After reviewing the destroy plan, `yes` was entered at the confirmation prompt.
 
-Result:
+**Result:**
 
 ```text
 Destroy complete! Resources: 2 destroyed.
 ```
 
-Verification commands:
+Confirm that the container was removed and the image remained locally available:
 
 ```bash
 sudo docker ps -a --filter name=opentofu-lab-nginx
 sudo docker images nginx
 ```
 
-Observed results:
+**Observed results:**
 
 - No `opentofu-lab-nginx` container was listed.
-- The local `nginx:alpine` image remained available, consistent with `keep_locally = true`.
+- The `nginx:alpine` image remained available locally, consistent with `keep_locally = true`.
 
 ## Security Notes
 
-- The container port was published on `127.0.0.1`, rather than all host interfaces.
-- `privileged = false` was set.
-- The container memory limit was set to 128 MB; `memory_swap = 128` sets the total memory-plus-swap limit to 128 MB for this provider schema.
-- The `pids_limit` argument was not used because provider v4.6.0 rejected it as unsupported.
-- OpenTofu was run with `sudo` because it interacted with `/var/run/docker.sock`. Access to the Docker socket is highly privileged and can effectively grant root-level control of the host. Use this pattern only in a controlled lab, review provider code and pin provider versions, and do not give untrusted users access to the Docker socket.
-- No Azure account or cloud resources were used in this lab, so it did not incur Azure resource charges.
+- The container port was bound to `127.0.0.1`, not `0.0.0.0` or the Ubuntu VM's LAN address.
+- `privileged = false` was configured.
+- The container memory limit was configured as 128 MB; `memory_swap = 128` sets the total memory-plus-swap limit to 128 MB for this provider schema.
+- `pids_limit` was not retained because the pinned provider rejected it as an unsupported argument.
+- OpenTofu was run with `sudo` to access `/var/run/docker.sock`. Docker socket access is highly privileged and can provide effective root-level control of the host. This approach is suitable only for a controlled lab; review provider versions and do not grant untrusted users access to the Docker socket.
+- No Azure account or cloud resources were used, so this exercise did not create Azure resource charges.
 
 ## Lessons Learned
 
-- OpenTofu describes the desired state in code and uses a plan before making changes.
-- A provider translates IaC configuration into operations against the target platform—in this case, the local Docker Engine.
-- `init`, `fmt`, `plan`, `apply`, service validation, and `destroy` form a repeatable IaC workflow.
-- Provider schemas matter: arguments must be supported by the pinned provider version.
-- State and the lock file are important for reproducibility. Keep the project configuration and `terraform.lock.hcl` under version control; do not commit sensitive files or state without reviewing their contents.
+- IaC describes a desired state in configuration rather than relying only on manual commands.
+- `init`, `fmt`, `plan`, `apply`, service validation, and `destroy` form a repeatable workflow.
+- A provider translates the configuration into operations against a target platform; here, that platform was the local Docker Engine.
+- Provider schemas are version-specific, so arguments must be checked against the pinned version.
+- The configuration and `terraform.lock.hcl` support reproducibility. Review state and other generated files before committing them to a public repository; do not commit secrets.
 
 ## References
 
