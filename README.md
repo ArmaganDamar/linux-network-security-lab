@@ -188,7 +188,7 @@ This homelab will be expanded with additional security and infrastructure exerci
 - [x] Vulnerability scanning
 - [x] IDS/IPS
 - [x] Docker security
-- [ ] Active Directory lab
+- [x] Active Directory lab
 - [ ] Cloud infrastructure
 - [ ] AWS/Azure security fundamentals
 - [ ] SIEM and security monitoring
